@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <title>Busca de Livros</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h1>Busca de Livros</h1>
+      <form>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Buscar livro">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" onclick="searchBook()">Buscar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h3 id="title"></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Autor</th>
+              <th>Ano de publicação</th>
+            </tr>
+          </thead>
+          <tbody id="book-list">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    var settings = {
+      "async": true,
+      "crossDomain": true,
+      "url": "http://127.0.0.1:3000/book/",
+      "method": "GET"
+    };
+    function searchBook() {
+      $.ajax(settings).done(function (response) {
+        console.log(response.books);
+        const title = document.querySelector('title');
+        title.textContent = response.books;
+      });
+    }
+    $.ajax(settings).done(function(response) {
+      const bookList = document.querySelector('#book-list');
+      bookList.innerHTML = '';
+      response.books.forEach(book => {
+        const row = document.createElement('tr');
+        const title = document.createElement('td');
+        title.textContent = book.title;
+        const author = document.createElement('td');
+        author.textContent = book.author;
+        const publicationYear = document.createElement('td');
+        publicationYear.textContent = book.publicationYear;
+        row.appendChild(title);
+        row.appendChild(author);
+        row.appendChild(publicationYear);
+        bookList.appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>
